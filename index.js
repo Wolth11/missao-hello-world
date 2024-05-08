@@ -56,26 +56,27 @@ async function main() {
 
     })
 
-    app.put("/personagem/:id", function (req, res) {
+    app.put("/personagem/:id", async function (req, res) {
         const id = req.params.id
 
-        if (!lista[id - 1]) {
-            return res.status(404).send("Item não encontrado.")
-        }
+        // if (!lista[id - 1]) {
+        //     return res.status(404).send("Item não encontrado.")
+        
+        const novoItem = req.body
 
-        const body = req.body
-        const novoItem = body.nome
-
-        if (!novoItem) {
+        if (!novoItem || !novoItem.nome) {
             return res.status(400).send("Cadê o nome parsa?")
         }
 
-        if (lista.includes(novoItem)) {
-            return res.status(409).send("Você é a dory?")
-        }
+        // if (lista.includes(novoItem)) {
+        //     return res.status(409).send("Você é a dory?")
+        // }
 
-        lista[id - 1] = novoItem
-        res.send("item atualizado com sucesso: " + id + " - " + novoItem)
+        await collection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: novoItem }
+        )
+        res.send(novoItem)
     })
 
     app.delete("/personagem/:id", function (req, res) {
