@@ -11,7 +11,7 @@ app.get("/oi", function (req, res) {
 })
 
 app.get("/personagem", function (req, res) {
-    res.send(lista)
+    res.send(lista.filter(Boolean))
 })
 
 app.get("/personagem/:id", function (req, res) {
@@ -39,5 +39,11 @@ app.put("/personagem/:id", function (req, res) {
     const novoItem = body.nome
     lista[id - 1] = novoItem
     res.send("item atualizado com sucesso: " + id + " - " + novoItem)
+})
+
+app.delete("/personagem/:id", function (req, res) {
+    const id = req.params.id
+    delete lista[id - 1]
+    res.send("Item removido com sucesso: " + id)
 })
 app.listen(3000)
