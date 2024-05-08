@@ -23,8 +23,9 @@ async function main() {
         res.send("olá mundo")
     })
 
-    app.get("/personagem", function (req, res) {
-        res.status(201).send(lista.filter(Boolean))
+    app.get("/personagem", async function (req, res) {
+        const itens = await collection.find().toArray()
+        res.send(itens)
     })
 
     app.get("/personagem/:id", function (req, res) {
