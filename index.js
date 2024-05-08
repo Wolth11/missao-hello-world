@@ -40,22 +40,19 @@ async function main() {
 
     app.use(express.json())
 
-    app.post("/personagem", function (req, res) {
-        const body = req.body
+    app.post("/personagem", async function (req, res) {
+        const novoItem = req.body
 
-        const novoItem = body.nome
-
-        if (!novoItem) {
-            return res.status(400).send("Cadê o nome parsa?")
+        if (!novoItem || !novoItem.nome) {
+            return res.status(409).send("Sem info correta sem resposta")
         }
 
-        if (lista.includes(novoItem)) {
-            return res.status(409).send("Você é a dory?")
-        }
+        // if (lista.includes(novoItem)) {
+        //     return res.status(409).send("Você é a dory?")
+        // }
 
-        lista.push(novoItem)
-
-        res.status(201).send("item enviado com sucesso: " + novoItem)
+        await collection.insertOne(novoItem)
+        res.status(201).send(novoItem)
 
     })
 
