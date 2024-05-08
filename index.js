@@ -11,13 +11,13 @@ app.get("/oi", function (req, res) {
 })
 
 app.get("/personagem", function (req, res) {
-    res.send(lista.filter(Boolean))
+    res.status(201).send(lista.filter(Boolean))
 })
 
 app.get("/personagem/:id", function (req, res) {
     const id = req.params.id
     const item = lista[id - 1]
-    res.send(item)
+    res.status(201).send(item)
 })
 
 app.use(express.json())
@@ -27,9 +27,17 @@ app.post("/personagem", function (req, res) {
 
     const novoItem = body.nome
 
+    if (!novoItem) {
+        return res.status(400).send("Cadê o nome parsa?")
+    }
+
+    if (lista.includes(novoItem)) {
+        return res.status(409).send("Você é a dory?")
+    }
+
     lista.push(novoItem)
 
-    res.send("item enviado com sucesso: " + novoItem)
+    res.status(201).send("item enviado com sucesso: " + novoItem)
 
 })
 
@@ -37,6 +45,15 @@ app.put("/personagem/:id", function (req, res) {
     const id = req.params.id
     const body = req.body
     const novoItem = body.nome
+
+    if (!novoItem) {
+        return res.status(400).send("Cadê o nome parsa?")
+    }
+
+    if (lista.includes(novoItem)) {
+        return res.status(409).send("Você é a dory?")
+    }
+
     lista[id - 1] = novoItem
     res.send("item atualizado com sucesso: " + id + " - " + novoItem)
 })
